@@ -4,7 +4,7 @@ const app = express();
 const { schemaBuilt, resolver } = require('./models/schema');
 const mongoose = require("mongoose");
 
-mongoose.connect(`mongodb+srv://evernote_admin:lifeismeisthepassword@cluster0.oegma.mongodb.net/evernote_clone?retryWrites=true&w=majority`, 
+mongoose.connect(INSERTYOUROWNMONGOLINK, 
 {
     useNewUrlParser : true,
     useUnifiedTopology: true ,
