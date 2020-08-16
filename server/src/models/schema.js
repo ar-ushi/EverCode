@@ -44,29 +44,37 @@ type Mutation {
 `);
 
 const resolver = {
-    notes: async() => {
+    notes: async () => {
         try {
-            const allNotes = await note.find((err,notes) =>{
-                if(err) return err
+            const allNotes = await note.find((err, notes) => {
+                if (err) return err
                 return notes
             }) //? note is our collection here 
             return allNotes
         } catch (error) {
             throw error
         }
-    
+
     },
-    Note : async({_id}) => {
+    Note: async ({
+        _id
+    }) => {
         try {
-            const oneNote = await note.findById({_id : _id})
+            const oneNote = await note.findById({
+                _id: _id
+            })
             return oneNote._doc
         } catch (error) {
             throw error
         }
     },
-    deleteNote : async({_id}) => {
+    deleteNote: async ({
+        _id
+    }) => {
         try {
-            const delNote = await note.findByIdAndDelete({_id : _id})
+            const delNote = await note.findByIdAndDelete({
+                _id: _id
+            })
             return delNote
         } catch (error) {
             throw error
