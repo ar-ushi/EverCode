@@ -86,7 +86,7 @@ const resolver = {
                 _id: _id
             })
             if (!mynote){
-                throw new Error(`Couldn't find author with id ${_id}`);
+                throw new Error(`Couldn't find user with id ${_id}`);
             }
             if (title !== undefined){
                 mynote.title = title;

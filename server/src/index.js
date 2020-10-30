@@ -4,6 +4,7 @@ const app = express();
 const { schemaBuilt, resolver } = require('./models/schema');
 const mongoose = require("mongoose");
 const dotenv = require("dotenv");
+const allResolvers = require("./resolvers/resolvers");
 
 dotenv.config();
 
@@ -18,7 +19,7 @@ app.use(
     "/graphql",  //endpoint
     graphqlHTTP({
         schema : schemaBuilt,
-        rootValue : resolver,
+        rootValue : allResolvers,
         graphiql: true
     }),
 )

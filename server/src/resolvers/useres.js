@@ -1,22 +1,39 @@
 const User = require('../models/users')
-
+const bcrypt = require('bcryptjs')
 module.exports = {
     createUser: async ({
         input
     }) => {
-        const user = new User({
-            username: input.username,
-            email: input.email,
-            password: input.password
+        const findUser = await User.findOne({
+            email : input.email
         })
-        try {
-            const result = await user.save()
-            return {
-                ...result._doc
-            }
-        } catch (error) {
-            throw error
+        if (findsUser){ //if already user with that email 
+            return new Error("Users already exists")
         }
+        //hashing pw 
+        const saltRounds = 12;
+        
+        bcrypt.genSalt(saltRounds, (err,salt) => {
+            bcrypt.hash(input.password, salt, 
+                (err,hash) => {
+                    const user = new User({
+                        username: input.username,
+                        email: input.email,
+                        password: hash,
+                    });
+                    try {
+                        const result = user.save()
+                        return {
+                            ...result._doc,
+                            password: null
+                        }
+                    } catch (error) {
+                        throw error
+                    }
+            })
+        });
+       
+        
     }
 }
 
