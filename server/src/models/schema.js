@@ -3,9 +3,6 @@ const {
 } = require("graphql");
 const note = require('./notes');
 const users = require("./users");
-const notes = require("./notes");
-const { update } = require("./notes");
-
 
 
 const schemaBuilt = buildSchema(`
@@ -18,7 +15,7 @@ type note{
     title : String
     content : String
     image : String
-    userCreator: User
+    userCreator: User!
 }
 type User{
     _id : ID
@@ -41,8 +38,8 @@ input userinput{
 type Mutation {
     createNote(input : noteinput) : note!
     createUser(input : userinput) : User!
-    updateNote(id : ID!,title : String,content: String, image: String) : note
-    deleteNote(id : ID):  note
+    updateNote(_id : ID!,title : String,content: String, image: String) : note
+    deleteNote(_id : ID):  note
 }
 `);
 
@@ -83,10 +80,10 @@ const resolver = {
             throw error
         }
     },
-    updateNote: async (_, {_id, title, content, image}) => {
+    updateNote: async ({_id, title, content, image}) => {
         try{
-            const mynote = await note.findById({
-                _id : _id
+            const mynote =  await note.findById({
+                _id: _id
             })
             if (!mynote){
                 throw new Error(`Couldn't find author with id ${_id}`);
@@ -100,7 +97,15 @@ const resolver = {
             if (image !== undefined){
                 mynote.image = image;
             }
-            return mynote;
+            try{
+                const result = await mynote.save()
+                res = {
+                    ...result._doc
+                }
+                return res
+            }catch(error){
+                throw error
+            }
         }catch (error) {
             throw error
         }
@@ -121,6 +126,7 @@ const resolver = {
                 // The spread syntax allows an expression to be expanded in places where multiple arguments are expected.
             }
             return notes
+        
         } catch (error) {
             throw error
         }

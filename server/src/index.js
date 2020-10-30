@@ -1,9 +1,11 @@
 const express = require("express");
 const { graphqlHTTP }  = require("express-graphql");
 const app = express();
-const { schemaBuilt } = require('./models/schema');
-const allResolvers = require("./resolvers/resolvers")
+const { schemaBuilt, resolver } = require('./models/schema');
 const mongoose = require("mongoose");
+const dotenv = require("dotenv");
+
+dotenv.config();
 
 mongoose.connect(process.env.DB_CONNECTION, 
 {
@@ -16,7 +18,7 @@ app.use(
     "/graphql",  //endpoint
     graphqlHTTP({
         schema : schemaBuilt,
-        rootValue : allResolvers,
+        rootValue : resolver,
         graphiql: true
     }),
 )
