@@ -3,6 +3,8 @@ const {
 } = require("graphql");
 const note = require('./notes');
 const users = require("./users");
+const notes = require("./notes");
+const { update } = require("./notes");
 
 
 
@@ -39,6 +41,7 @@ input userinput{
 type Mutation {
     createNote(input : noteinput) : note!
     createUser(input : userinput) : User!
+    updateNote(id : ID!,title : String,content: String, image: String) : note
     deleteNote(id : ID):  note
 }
 `);
@@ -80,6 +83,28 @@ const resolver = {
             throw error
         }
     },
+    updateNote: async (_, {_id, title, content, image}) => {
+        try{
+            const mynote = await note.findById({
+                _id : _id
+            })
+            if (!mynote){
+                throw new Error(`Couldn't find author with id ${_id}`);
+            }
+            if (title !== undefined){
+                mynote.title = title;
+            }
+            if (content !== undefined){
+                mynote.content = content;
+            }
+            if (image !== undefined){
+                mynote.image = image;
+            }
+            return mynote;
+        }catch (error) {
+            throw error
+        }
+    },
     createNote: async ({
         input
     }) => {
@@ -101,6 +126,7 @@ const resolver = {
         }
     }
 };
+
 
 
 

@@ -5,7 +5,7 @@ const { schemaBuilt } = require('./models/schema');
 const allResolvers = require("./resolvers/resolvers")
 const mongoose = require("mongoose");
 
-mongoose.connect(`mongodb+srv://evernote_admin:lifeismeisthepassword@cluster0.oegma.mongodb.net/evernote_clone?retryWrites=true&w=majority`, 
+mongoose.connect(process.env.DB_CONNECTION, 
 {
     useNewUrlParser : true,
     useUnifiedTopology: true ,
