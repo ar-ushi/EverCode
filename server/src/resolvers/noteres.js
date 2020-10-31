@@ -50,7 +50,10 @@ module.exports = {
     //delete a Note
     deleteNote: async ({
         _id
-    }) => {
+    }, req) => {
+        if (!req.authUser){ //doesn't find header in req
+        throw new Error("Not Authorized to delete Note")
+        } 
         try {
             const delNote = await note.findByIdAndDelete({
                 _id: _id
@@ -60,7 +63,10 @@ module.exports = {
             throw error
         }
     },
-    updateNote: async ({_id, title, content, image}) => {
+    updateNote: async ({_id, title, content, image}, req) => {
+        if (!req.authUser){ //doesn't find header in req
+        throw new Error("Not Authorized to update Note")
+        } 
         try{
             const mynote =  await note.findById({
                 _id: _id
@@ -99,7 +105,7 @@ module.exports = {
             title: input.title,
             content: input.content,
             image: input.image,
-            userCreator: '5f3967f1961b206b40a991d5',
+            userCreator: req.userId
         }) //need t o include the user creator to link this note to one user
         let notes;
         try {
@@ -109,7 +115,7 @@ module.exports = {
                 userCreator: getUser(result._doc.userCreator)
                 // The spread syntax allows an expression to be expanded in places where multiple arguments are expected.
             }
-            const findUser = User.findById('5f3967f1961b206b40a991d5')
+            const findUser = User.findById(req.userId)
             if (!findUser) return new Error('User not found')
             findUser.createdNotes.push(Note)
             await findUser.save();

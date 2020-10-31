@@ -9,14 +9,15 @@ const token_very = process.env.TOKEN_SECRET
 
 const authMiddleware = (req,res,next) =>{
     const header = req.get('Authorization')
+    //console.log(header)
     if (!header){
         req.authUser = false //no auth hence no token
-        next()
+        return next()
     }
     const token = header.split('')[1] // ? Authorization : ____ token - splits in array and has barrier and token
     if (!token || token == ""){
         req.authUser = false
-        next()
+        return next()
     }else{
         const decoded  = jwt.verify(token, token_very)
         req.authUser = true
