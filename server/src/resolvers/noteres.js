@@ -48,14 +48,53 @@ module.exports = {
         }
     },
     //delete a Note
-    deleteNote: async() => {
-
+    deleteNote: async ({
+        _id
+    }) => {
+        try {
+            const delNote = await note.findByIdAndDelete({
+                _id: _id
+            })
+            return delNote
+        } catch (error) {
+            throw error
+        }
     },
-    updateNote: async() =>{
-
+    updateNote: async ({_id, title, content, image}) => {
+        try{
+            const mynote =  await note.findById({
+                _id: _id
+            })
+            if (!mynote){
+                throw new Error(`Couldn't find user with id ${_id}`);
+            }
+            if (title !== undefined){
+                mynote.title = title;
+            }
+            if (content !== undefined){
+                mynote.content = content;
+            }
+            if (image !== undefined){
+                mynote.image = image;
+            }
+            try{
+                const result = await mynote.save()
+                res = {
+                    ...result._doc
+                }
+                return res
+            }catch(error){
+                throw error
+            }
+        }catch (error) {
+            throw error
+        }
     },
     //create a note
-    createNote: async({input}) => {
+    createNote: async({input}, req) => {
+        if (!req.authUser){ //doesn't find header in req
+        throw new Error("Not Authorized to create a Note")
+        } 
         const Note = new note({
             title: input.title,
             content: input.content,
