@@ -39,7 +39,7 @@ module.exports = {
             if (!findUser){
                 return new Error("User doesn't exist")
             }
-            const matchPassword = await bcrypt.compare(password, password)
+            const matchPassword = await bcrypt.compare(password,findUser.password)
             if (!matchPassword){
                 return new Error("Passwords don't match")
             }
