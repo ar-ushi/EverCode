@@ -9,6 +9,7 @@ const schemaBuilt = buildSchema(`
 type Query{
     notes: [note]
     Note(_id: ID) : note
+    login(username: String, password: String): AuthData
 }
 type note{
     _id : ID
@@ -23,6 +24,11 @@ type User{
     email : String
     password : String 
     createdNotes: [note]
+}
+type AuthData{
+    userId : ID!
+    email : String
+    token : String
 }
 
 input noteinput{
