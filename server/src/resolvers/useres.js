@@ -1,8 +1,9 @@
 const User = require('../models/users')
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
-const crypto = require('crypto')
-
+const dotenv = require('dotenv')
+dotenv.config()
+const token_very = process.env.TOKEN_SECRET
 module.exports = {
     createUser: async ({
         input
@@ -42,10 +43,14 @@ module.exports = {
             if (!matchPassword){
                 return new Error("Passwords don't match")
             }
-            const token = jwt.sign({userId: findUser._id, email: findUser.email, })
-
-        }catch{
-
+            const token = jwt.sign({userId: findUser._id, email: findUser.email}, token_very,{ expiresIn: '1800s' })
+            return{
+                userId : findUser._id,
+                email: findUser.email,
+                token: token
+            }
+        }catch(err){
+            throw err
         }
     }
 }
